@@ -426,6 +426,7 @@ func (d *diskQueue) sync() error {
 	return nil
 }
 
+// retrieveMetaData从文件系统初始化状态
 // retrieveMetaData initializes state from the filesystem
 func (d *diskQueue) retrieveMetaData() error {
 	var f *os.File
@@ -642,7 +643,7 @@ func (d *diskQueue) ioLoop() {
 		case <-d.emptyChan:
 			d.emptyResponseChan <- d.deleteAllFiles()
 			count = 0
-		case dataWrite := <-d.writeChan:
+		case dataWrite := <-d.writeChan: // 有新数据写入
 			count++
 			d.writeResponseChan <- d.writeOne(dataWrite)
 		case <-syncTicker.C:
