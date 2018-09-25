@@ -200,6 +200,7 @@ func (d *diskQueue) exit(deleted bool) error {
 	return nil
 }
 
+// 删除队列中任何待处理的数据
 // Empty destructively clears out any pending data in the queue
 // by fast forwarding read positions and removing intermediate files
 func (d *diskQueue) Empty() error {
