@@ -622,8 +622,9 @@ func (d *diskQueue) ioLoop() {
 			count = 0
 		}
 
+		// 只有读的文件索引小于写的文件索引  或者 读写同一个文件时读的位置小于写的位置 时才从文件读取新消息
 		if (d.readFileNum < d.writeFileNum) || (d.readPos < d.writePos) {
-			if d.nextReadPos == d.readPos {
+			if d.nextReadPos == d.readPos { // 相等时才表示需要读取新数据 moveForward已调用
 				dataRead, err = d.readOne()
 				if err != nil {
 					d.logf(ERROR, "DISKQUEUE(%s) reading at %d of %s - %s",
@@ -632,7 +633,7 @@ func (d *diskQueue) ioLoop() {
 					continue
 				}
 			}
-			r = d.readChan
+			r = d.readChan // d.readChan里的数据还没读取 moveForward还没调用
 		} else {
 			r = nil
 		}
